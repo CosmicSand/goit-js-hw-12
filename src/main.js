@@ -5,7 +5,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchingForm = document.querySelector('.searching-form');
-const searchBtn = document.querySelector('.search-btn');
+const searchBtn = document.querySelector('.button');
+const loadMoreBtn = document.querySelector('.load-more-btn');
 const gallery = document.querySelector('.gallery');
 const container = document.querySelector('.container');
 const errorOptions = {
@@ -25,6 +26,14 @@ let lightbox = new SimpleLightbox('.gallery a', {
   className: 'lightbox-on',
 });
 let page = 1;
+
+// =================== Функція видображення кнопки "Load more" =====
+
+function showLoadMoreBtn() {
+  loadMoreBtn.style.display = 'block';
+}
+
+// =================== Слухач події кліку на кнопку "Submit" ===================
 
 searchingForm.addEventListener('submit', requestImages);
 
