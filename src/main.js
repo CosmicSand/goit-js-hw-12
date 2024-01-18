@@ -24,6 +24,7 @@ let lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
   className: 'lightbox-on',
 });
+let page = 1;
 
 searchingForm.addEventListener('submit', requestImages);
 
@@ -41,7 +42,8 @@ function requestImages(event) {
     key: '41547319-253ef689baf3db6007ef0d5b5',
     q: `${serchingRequest}`,
     orientation: 'horizontal',
-    per_page: 9,
+    per_page: 40,
+    page: `${page}`,
     image_type: 'photo',
     safesearch: true,
   });
