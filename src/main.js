@@ -1,3 +1,4 @@
+import axios from 'axios';
 import izitoast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import errorIcon from './img/svg/error.svg';
@@ -20,18 +21,16 @@ const errorOptions = {
   progressBarColor: '#B5EA7C',
   position: 'topRight',
 };
+const perPage = 40;
+let page = 1;
+let serchingRequest;
+let searchingOptions;
+let imagesArray;
 let lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
   className: 'lightbox-on',
 });
-let page = 1;
-
-// =================== Функція видображення кнопки "Load more" =====
-
-function showLoadMoreBtn() {
-  loadMoreBtn.style.display = 'block';
-}
 
 // =================== Слухач події кліку на кнопку "Submit" ===================
 
@@ -39,53 +38,94 @@ searchingForm.addEventListener('submit', requestImages);
 
 // =================== Функція запиту на сервер ===================
 
-function requestImages(event) {
+async function requestImages(event) {
   event.preventDefault();
+  hideLoadMoreBtn();
   gallery.innerHTML = '';
   page = 1;
   addLoading();
+
   const searchTitle = event.currentTarget.elements.searching.value.trim();
+
   // ======= encodeURIComponent(searchTitle) гарантує, що символи будуть правильно закодовані для URL ===================
-  const serchingRequest = encodeURIComponent(searchTitle);
+
+  serchingRequest = encodeURIComponent(searchTitle);
   console.log(serchingRequest);
-  const searchingOptions = new URLSearchParams({
-    key: '41547319-253ef689baf3db6007ef0d5b5',
-    q: `${serchingRequest}`,
-    orientation: 'horizontal',
-    per_page: 40,
-    page: `${page}`,
-    image_type: 'photo',
-    safesearch: true,
-  });
-  fetch(`https://pixabay.com/api/?${searchingOptions}`)
+
+  fetchImages()
     .then(response => {
-      return response.json();
-    })
-    .then(api => {
-      const imagesArray = api.hits;
-      if (imagesArray.length === 0) {
+      const imgQuantity = response.data.totalHits;
+      if (imgQuantity === 0) {
         throw new Error(
           `There are no images matching your search query. Please try again!`
         );
       }
+      imagesArray = response.data.hits;
       galleryCreation(imagesArray);
-      removeLoading();
+      showLoadMoreBtn();
+      loadMoreBtn.addEventListener('click', loadMoreImages);
     })
     .catch(error => {
-      console.log(error);
       izitoast.error(
         errorOptions,
         (errorOptions.message = `Sorry! ${error.message}`)
       );
+    })
+    .finally(() => {
       removeLoading();
     });
+}
+
+// =================== Функція запиту на сервер ===================
+
+async function fetchImages() {
+  searchingOptions = {
+    params: {
+      key: '41547319-253ef689baf3db6007ef0d5b5',
+      q: `${serchingRequest}`,
+      orientation: 'horizontal',
+      per_page: perPage,
+      page: page,
+      image_type: 'photo',
+      safesearch: true,
+      order: 'likes',
+    },
+  };
+  const response = await axios.get(
+    'https://pixabay.com/api/',
+    searchingOptions
+  );
+  return response;
+}
+
+// =================== Колбек функція для слухача події кліку на кнопку "Load more" ===================
+
+async function loadMoreImages() {
+  page += 1;
+  fetchImages()
+    .then(response => {
+      const imgQuantity = response.data.totalHits;
+      if (imgQuantity === 0) {
+        throw new Error(
+          `There are no images matching your search query. Please try again!`
+        );
+      }
+      imagesArray = response.data.hits;
+      galleryCreation(imagesArray);
+    })
+    .catch(error => {
+      izitoast.error(
+        errorOptions,
+        (errorOptions.message = `Sorry! ${error.message}`)
+      );
+    })
+    .finally(() => {});
 }
 
 // =================== Функція створення галереї ===================
 
 function galleryCreation(imagesArray) {
   const markup = imagesArray
-    .toSorted((a, b) => b.likes - a.likes)
     .map(image => {
       return `<li class="gallery-item"><div class='image-wrapper'>
   <a class="gallery-link" href="${image.largeImageURL}">
@@ -124,6 +164,19 @@ function galleryCreation(imagesArray) {
   gallery.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
+
+// =================== Функція відображення кнопки "Load more" =====
+
+function showLoadMoreBtn() {
+  loadMoreBtn.style.display = 'block';
+}
+
+// =================== Функція приховування кнопки "Load more" =====
+
+function hideLoadMoreBtn() {
+  loadMoreBtn.style.display = 'none';
+}
+
 // =================== Функція додавання спінера, стилю search-btn-disabled, змінення стану кнопки на відключено ===================
 
 function addLoading() {
