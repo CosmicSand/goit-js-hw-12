@@ -33,6 +33,7 @@ searchingForm.addEventListener('submit', requestImages);
 function requestImages(event) {
   event.preventDefault();
   gallery.innerHTML = '';
+  page = 1;
   addLoading();
   const searchTitle = event.currentTarget.elements.searching.value.trim();
   // ======= encodeURIComponent(searchTitle) гарантує, що символи будуть правильно закодовані для URL ===================
