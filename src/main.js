@@ -2,6 +2,7 @@ import axios from 'axios';
 import izitoast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import errorIcon from './img/svg/error.svg';
+import notificationIcon from './img/svg/notification.svg';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -109,11 +110,13 @@ function loadMoreImages() {
       const imgQuantity = response.data.totalHits;
       const totalPages = Math.ceil(imgQuantity / perPage);
       if (page === totalPages) {
+        removeEventListener('click', loadMoreImages);
         hideLoadMoreBtn();
         izitoast.info(
           errorOptions,
+          (errorOptions.iconUrl = `${notificationIcon}`),
           (errorOptions.message = `You have reached the end of the search results.`),
-          (errorOptions.backgroundColor = '#B5EA7C')
+          (errorOptions.backgroundColor = '#0ab6f5')
         );
       }
       imagesArray = response.data.hits;
