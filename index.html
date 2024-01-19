@@ -23,13 +23,14 @@ https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css
     <script type="module" crossorigin src="/goit-js-hw-12/commonHelpers.js"></script>
     <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-bad0427b.js">
     <link rel="stylesheet" href="/goit-js-hw-12/assets/vendor-eb6030bc.css">
-    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-cc3694c6.css">
+    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-f3e4edd4.css">
   </head>
   <body>
     <div class="wrapper">
       <form class="searching-form">
         <input
           class="search-inp"
+          id="search"
           type="text"
           name="searching"
           placeholder="Search images..."
@@ -40,10 +41,15 @@ https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css
       </form>
 
       <div class="container">
+        <a href="#search" class="up-link">
+          <svg class="up-svg" width="40" height="40">
+            <use href="/goit-js-hw-12/assets/icons-3f31c2a0.svg#up"></use>
+          </svg>
+        </a>
         <ul class="gallery"></ul>
         <button class="button load-more-btn">Load more</button>
       </div>
-      
     </div>
+    
   </body>
 </html>
