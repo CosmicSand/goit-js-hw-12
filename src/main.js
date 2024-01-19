@@ -64,7 +64,6 @@ async function requestImages(event) {
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
       document.addEventListener('scroll', scrollToTopShowOrHide);
-      // scrollToTop();
       if (imgQuantity > perPage) {
         showLoadMoreBtn();
         loadMoreBtn.addEventListener('click', loadMoreImages);
@@ -106,6 +105,7 @@ async function fetchImages() {
 // =================== Колбек функція для слухача події кліку на кнопку "Load more" ===================
 
 function loadMoreImages() {
+  addLoading();
   page += 1;
   fetchImages()
     .then(response => {
@@ -123,7 +123,6 @@ function loadMoreImages() {
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
-
       scrollPage();
     })
     .catch(error => {
@@ -132,7 +131,9 @@ function loadMoreImages() {
         (iziOptions.message = `Sorry! ${error.message}`)
       );
     })
-    .finally(() => {});
+    .finally(() => {
+      // removeLoading();
+    });
 }
 
 // =================== Функція створення галереї ===================
@@ -193,7 +194,7 @@ function hideLoadMoreBtn() {
 // =================== Функція додавання спінера, стилю search-btn-disabled, змінення стану кнопки на відключено ===================
 
 function addLoading() {
-  container.insertAdjacentHTML('afterbegin', '<span class="loader"></span>');
+  container.insertAdjacentHTML('beforeend', '<span class="loader"></span>');
   searchBtn.disabled = true;
   searchBtn.classList.add('search-btn-disabled');
 }
@@ -223,7 +224,6 @@ function scrollToTopShowOrHide() {
 function scrollPage() {
   const galleryItem = document.querySelector('.gallery-item');
   const scrollingPosition = galleryItem.getBoundingClientRect().height;
-  console.log(scrollingPosition);
   window.scrollBy({
     top: scrollingPosition * 2 + 72,
     behavior: 'smooth',
