@@ -11,7 +11,7 @@ const searchBtn = document.querySelector('.button');
 const loadMoreBtn = document.querySelector('.load-more-btn');
 const gallery = document.querySelector('.gallery');
 const container = document.querySelector('.container');
-const errorOptions = {
+const iziOptions = {
   title: '',
   iconUrl: `${errorIcon}`,
   backgroundColor: '#EF4040',
@@ -70,8 +70,8 @@ async function requestImages(event) {
     })
     .catch(error => {
       izitoast.error(
-        errorOptions,
-        (errorOptions.message = `Sorry! ${error.message}`)
+        iziOptions,
+        (iziOptions.message = `Sorry! ${error.message}`)
       );
     })
     .finally(() => {
@@ -113,10 +113,10 @@ function loadMoreImages() {
         removeEventListener('click', loadMoreImages);
         hideLoadMoreBtn();
         izitoast.info(
-          errorOptions,
-          (errorOptions.iconUrl = `${notificationIcon}`),
-          (errorOptions.message = `You have reached the end of the search results.`),
-          (errorOptions.backgroundColor = '#0ab6f5')
+          iziOptions,
+          (iziOptions.iconUrl = `${notificationIcon}`),
+          (iziOptions.message = `You have reached the end of the search results.`),
+          (iziOptions.backgroundColor = '#0ab6f5')
         );
       }
       imagesArray = response.data.hits;
@@ -124,8 +124,8 @@ function loadMoreImages() {
     })
     .catch(error => {
       izitoast.error(
-        errorOptions,
-        (errorOptions.message = `Sorry! ${error.message}`)
+        iziOptions,
+        (iziOptions.message = `Sorry! ${error.message}`)
       );
     })
     .finally(() => {});
