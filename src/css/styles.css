@@ -19,6 +19,7 @@ body {
   color: #212121;
   line-height: 1.5;
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 h1,
@@ -56,9 +57,9 @@ button {
 }
 .wrapper {
   padding: 20px;
-  overflow-y: scroll;
   scroll-behavior: smooth;
 }
+
 .searching-form {
   width: fit-content;
   margin: 0 auto;

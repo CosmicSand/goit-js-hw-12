@@ -22,11 +22,10 @@ https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper" id="up">
       <form class="searching-form">
         <input
           class="search-inp"
-          id="search"
           type="text"
           name="searching"
           placeholder="Search images..."
@@ -37,13 +36,13 @@ https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css
       </form>
 
       <div class="container">
-        <a href="#search" class="up-link">
+        <ul class="gallery"></ul>
+        <button class="button load-more-btn">Load more</button>
+        <a href="#up" class="up-link">
           <svg class="up-svg" width="40" height="40">
             <use href="./img/svg/icons.svg#up"></use>
           </svg>
         </a>
-        <ul class="gallery"></ul>
-        <button class="button load-more-btn">Load more</button>
       </div>
     </div>
     <script type="module" src="./main.js"></script>
