@@ -65,6 +65,7 @@ async function requestImages(event) {
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
+      document.addEventListener('scroll', scrollToTopShowOrHide);
       // scrollToTop();
       if (imgQuantity > perPage) {
         showLoadMoreBtn();
@@ -124,6 +125,7 @@ function loadMoreImages() {
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
+
       scrollPage();
     })
     .catch(error => {
@@ -210,13 +212,12 @@ function removeLoading() {
 
 // =================== Функція повернення сторінки вверх ===================
 
-function scrollToTop() {
-  const scrollIcon = `<a href="#search" class="up-link">
-          <svg class="up-svg" width="32" height="32">
-            <use href="${icons}#up"></use>
-          </svg>
-        </a>`;
-  container.insertAdjacentHTML('beforeend', scrollIcon);
+function scrollToTopShowOrHide() {
+  if (window.scrollY > 100) {
+    document.querySelector('.up-link').classList.add('show');
+  } else {
+    document.querySelector('.up-link').classList.remove('show');
+  }
 }
 
 // =================== Функція скролу сторінки ===================
