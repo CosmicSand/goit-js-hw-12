@@ -1,12 +1,10 @@
 import axios from 'axios';
 import izitoast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import icons from './img/svg/icons.svg';
 import errorIcon from './img/svg/error.svg';
 import notificationIcon from './img/svg/notification.svg';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import up from './img/svg/up.svg';
 
 const searchingForm = document.querySelector('.searching-form');
 const searchBtn = document.querySelector('.button');
