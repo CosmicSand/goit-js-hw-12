@@ -132,7 +132,7 @@ function loadMoreImages() {
       );
     })
     .finally(() => {
-      // removeLoading();
+      removeLoading();
     });
 }
 
