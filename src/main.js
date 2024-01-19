@@ -1,10 +1,12 @@
 import axios from 'axios';
 import izitoast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import icons from './img/svg/icons.svg';
 import errorIcon from './img/svg/error.svg';
 import notificationIcon from './img/svg/notification.svg';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import up from './img/svg/up.svg';
 
 const searchingForm = document.querySelector('.searching-form');
 const searchBtn = document.querySelector('.button');
@@ -63,6 +65,7 @@ async function requestImages(event) {
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
+      // scrollToTop();
       if (imgQuantity > perPage) {
         showLoadMoreBtn();
         loadMoreBtn.addEventListener('click', loadMoreImages);
@@ -115,12 +118,13 @@ function loadMoreImages() {
         izitoast.info(
           iziOptions,
           (iziOptions.iconUrl = `${notificationIcon}`),
-          (iziOptions.message = `You have reached the end of the search results.`),
+          (iziOptions.message = `We're sorry, but you've reached the end of search results.`),
           (iziOptions.backgroundColor = '#0ab6f5')
         );
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
+      scrollPage();
     })
     .catch(error => {
       izitoast.error(
@@ -202,4 +206,27 @@ function removeLoading() {
   searchBtn.disabled = false;
   searchBtn.classList.remove('search-btn-disabled');
   searchingForm.reset();
+}
+
+// =================== Функція повернення сторінки вверх ===================
+
+function scrollToTop() {
+  const scrollIcon = `<a href="#search" class="up-link">
+          <svg class="up-svg" width="32" height="32">
+            <use href="${icons}#up"></use>
+          </svg>
+        </a>`;
+  container.insertAdjacentHTML('beforeend', scrollIcon);
+}
+
+// =================== Функція скролу сторінки ===================
+
+function scrollPage() {
+  const galleryItem = document.querySelector('.gallery-item');
+  const scrollingPosition = galleryItem.getBoundingClientRect().height;
+  console.log(scrollingPosition);
+  window.scrollBy({
+    top: scrollingPosition * 2 + 72,
+    behavior: 'smooth',
+  });
 }
