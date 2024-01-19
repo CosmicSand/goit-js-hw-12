@@ -62,8 +62,10 @@ async function requestImages(event) {
       }
       imagesArray = response.data.hits;
       galleryCreation(imagesArray);
-      showLoadMoreBtn();
-      loadMoreBtn.addEventListener('click', loadMoreImages);
+      if (imgQuantity > perPage) {
+        showLoadMoreBtn();
+        loadMoreBtn.addEventListener('click', loadMoreImages);
+      }
     })
     .catch(error => {
       izitoast.error(
@@ -100,14 +102,18 @@ async function fetchImages() {
 
 // =================== Колбек функція для слухача події кліку на кнопку "Load more" ===================
 
-async function loadMoreImages() {
+function loadMoreImages() {
   page += 1;
   fetchImages()
     .then(response => {
       const imgQuantity = response.data.totalHits;
-      if (imgQuantity === 0) {
-        throw new Error(
-          `There are no images matching your search query. Please try again!`
+      const totalPages = Math.ceil(imgQuantity / perPage);
+      if (page === totalPages) {
+        hideLoadMoreBtn();
+        izitoast.info(
+          errorOptions,
+          (errorOptions.message = `You have reached the end of the search results.`),
+          (errorOptions.backgroundColor = '#B5EA7C')
         );
       }
       imagesArray = response.data.hits;
