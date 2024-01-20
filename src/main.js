@@ -39,7 +39,7 @@ searchingForm.addEventListener('submit', requestImages);
 
 // =================== Функція запиту на сервер ===================
 
-async function requestImages(event) {
+function requestImages(event) {
   event.preventDefault();
   hideLoadMoreBtn();
   gallery.innerHTML = '';
