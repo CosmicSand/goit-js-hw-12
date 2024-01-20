@@ -209,7 +209,7 @@ function removeLoading() {
   searchingForm.reset();
 }
 
-// =================== Функція повернення сторінки вверх ===================
+// =================== Функція повернення сторінки до форми пошуку ===================
 
 function scrollToTopShowOrHide() {
   if (window.scrollY > 100) {
