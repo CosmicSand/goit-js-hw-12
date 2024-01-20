@@ -39,7 +39,7 @@ searchingForm.addEventListener('submit', galleryBuilding);
 
 // =================== Функція запиту на сервер ===================
 
-function galleryBuilding(event) {
+async function galleryBuilding(event) {
   event.preventDefault();
   hideLoadMoreBtn();
   gallery.innerHTML = '';
@@ -53,31 +53,29 @@ function galleryBuilding(event) {
   serchingRequest = encodeURIComponent(searchTitle);
   console.log(serchingRequest);
 
-  fetchImages()
-    .then(response => {
-      const imgQuantity = response.data.totalHits;
-      if (imgQuantity === 0) {
-        throw new Error(
-          `There are no images matching your search query. Please try again!`
-        );
-      }
-      imagesArray = response.data.hits;
-      galleryCreation(imagesArray);
-      document.addEventListener('scroll', scrollToTopShowOrHide);
-      if (imgQuantity > perPage) {
-        showLoadMoreBtn();
-        loadMoreBtn.addEventListener('click', loadMoreImages);
-      }
-    })
-    .catch(error => {
-      izitoast.error(
-        iziOptions,
-        (iziOptions.message = `Sorry! ${error.message}`)
+  try {
+    const responseGalleryBuilding = await fetchImages();
+    const imgQuantity = responseGalleryBuilding.totalHits;
+    if (imgQuantity === 0) {
+      throw new Error(
+        `There are no images matching your search query. Please try again!`
       );
-    })
-    .finally(() => {
-      removeLoading();
-    });
+    }
+    imagesArray = responseGalleryBuilding.hits;
+    galleryCreation(imagesArray);
+    document.addEventListener('scroll', scrollToTopShowOrHide);
+    if (imgQuantity > perPage) {
+      showLoadMoreBtn();
+      loadMoreBtn.addEventListener('click', loadMoreImages);
+    }
+  } catch (error) {
+    izitoast.error(
+      iziOptions,
+      (iziOptions.message = `Sorry! ${error.message}`)
+    );
+  } finally {
+    removeLoading();
+  }
 }
 
 // =================== Функція запиту на сервер ===================
@@ -99,41 +97,40 @@ async function fetchImages() {
     'https://pixabay.com/api/',
     searchingOptions
   );
-  return response;
+  return response.data;
 }
 
 // =================== Колбек функція для слухача події кліку на кнопку "Load more" ===================
 
-function loadMoreImages() {
+async function loadMoreImages() {
   addLoading();
   page += 1;
-  fetchImages()
-    .then(response => {
-      const imgQuantity = response.data.totalHits;
-      const totalPages = Math.ceil(imgQuantity / perPage);
-      if (page === totalPages) {
-        removeEventListener('click', loadMoreImages);
-        hideLoadMoreBtn();
-        izitoast.info(
-          iziOptions,
-          (iziOptions.iconUrl = `${notificationIcon}`),
-          (iziOptions.message = `We're sorry, but you've reached the end of search results.`),
-          (iziOptions.backgroundColor = '#0ab6f5')
-        );
-      }
-      imagesArray = response.data.hits;
-      galleryCreation(imagesArray);
-      scrollPage();
-    })
-    .catch(error => {
-      izitoast.error(
+
+  try {
+    const responseLoadMoreImages = await fetchImages();
+    const imgQuantity = responseLoadMoreImages.totalHits;
+    const totalPages = Math.ceil(imgQuantity / perPage);
+    if (page === totalPages) {
+      removeEventListener('click', loadMoreImages);
+      hideLoadMoreBtn();
+      izitoast.info(
         iziOptions,
-        (iziOptions.message = `Sorry! ${error.message}`)
+        (iziOptions.iconUrl = `${notificationIcon}`),
+        (iziOptions.message = `We're sorry, but you've reached the end of search results.`),
+        (iziOptions.backgroundColor = '#0ab6f5')
       );
-    })
-    .finally(() => {
-      removeLoading();
-    });
+    }
+    imagesArray = responseLoadMoreImages.hits;
+    galleryCreation(imagesArray);
+    scrollPage();
+  } catch (error) {
+    izitoast.error(
+      iziOptions,
+      (iziOptions.message = `Sorry! ${error.message}`)
+    );
+  } finally {
+    removeLoading();
+  }
 }
 
 // =================== Функція створення галереї ===================
