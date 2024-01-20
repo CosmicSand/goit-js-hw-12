@@ -35,11 +35,11 @@ let lightbox = new SimpleLightbox('.gallery a', {
 
 // =================== Слухач події кліку на кнопку "Submit" ===================
 
-searchingForm.addEventListener('submit', requestImages);
+searchingForm.addEventListener('submit', galleryBuilding);
 
 // =================== Функція запиту на сервер ===================
 
-function requestImages(event) {
+function galleryBuilding(event) {
   event.preventDefault();
   hideLoadMoreBtn();
   gallery.innerHTML = '';
